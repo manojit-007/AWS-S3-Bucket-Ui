@@ -56,7 +56,7 @@ export const forgetPasswordThunkFn = createAsyncThunk(
     try {
       const response = await apiClient.post("/api/v1/user/forgetPassword", {
         email,
-      });
+      },  { withCredentials: true });
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -74,7 +74,7 @@ export const resetPasswordThunkFn = createAsyncThunk(
       const { data } = await apiClient.post("/api/v1/user/reset-password", {
         resetToken,
         newPassword,
-      });
+      },  { withCredentials: true });
       return data; // { success, message, data }
     } catch (error) {
       return rejectWithValue(
@@ -89,7 +89,7 @@ export const deleteUserThunkFn = createAsyncThunk(
   "auth/deleteUser",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await apiClient.post("/api/v1/user/deleteUser");
+      const response = await apiClient.post("/api/v1/user/deleteUser", {}, { withCredentials: true });
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -104,7 +104,7 @@ export const userEmailVerificationThunkFn = createAsyncThunk(
   "auth/emailVerification",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await apiClient.post("/api/v1/user/getVerificationCode");
+      const response = await apiClient.post("/api/v1/user/getVerificationCode", {}, { withCredentials: true });
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -121,7 +121,7 @@ export const verifyEmailVerificationThunkFn = createAsyncThunk(
     try {
       const response = await apiClient.post("/api/v1/user/verifyEmail", {
         verificationToken,
-      });
+      },  { withCredentials: true });
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -165,7 +165,7 @@ export const removeKeyThunkFn = createAsyncThunk(
   "auth/removeAwsKey",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await apiClient.post("/api/v1/user/removeAwsApiKey");
+      const response = await apiClient.post("/api/v1/user/removeAwsApiKey", {}, { withCredentials: true });
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -182,7 +182,8 @@ export const submitAwsCredentialsThunkFn = createAsyncThunk(
     try {
       const response = await apiClient.post(
         "/api/v1/user/saveAwsApiKey",
-        awsCredentials
+        awsCredentials,
+        { withCredentials: true }
       );
         //console.log(response.data);
       return response.data;

@@ -8,7 +8,7 @@ export const getAllS3BucketContent = createAsyncThunk(
   "user/s3BucketContent",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await apiClient.get("/api/v1/user/getS3BucketContent", userData);
+      const response = await apiClient.get("/api/v1/user/getS3BucketContent", userData,  { withCredentials: true });
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || { message: error.message });
@@ -24,7 +24,7 @@ export const getUrlToUpload = createAsyncThunk(
     try {
       const response = await apiClient.post("/api/v1/user/getUrlToUpload", {
         files, // expecting: [{ fileName, contentType }]
-      });
+      },  { withCredentials: true });
       return response.data; // or response.data depending on your API format
     } catch (error) {
       return rejectWithValue(
