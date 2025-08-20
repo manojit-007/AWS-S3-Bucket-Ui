@@ -1,18 +1,14 @@
-import apiClient from "@/api";
+import { handleApiRequest } from "@/api/req";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import Cookies from "js-cookie";
 
 //   Sign Up
 export const signUpThunkFn = createAsyncThunk(
   "auth/signUp",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await apiClient.post("/api/v1/user/signUp", userData);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data || { message: error.message }
-      );
+      return await handleApiRequest("post", "/api/v1/user/signUp", userData);
+    } catch (err) {
+      return rejectWithValue(err);
     }
   }
 );
@@ -22,14 +18,9 @@ export const logInThunkFn = createAsyncThunk(
   "auth/logIn",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await apiClient.post("/api/v1/user/login", userData);
-      return response.data;
-    } catch (error) {
-        //console.log(error);
-
-      return rejectWithValue(
-        error.response?.data || { message: error.message } 
-      );
+      return await handleApiRequest("post", "/api/v1/user/login", userData);
+    } catch (err) {
+      return rejectWithValue(err);
     }
   }
 );
@@ -39,12 +30,9 @@ export const logOutThunkFn = createAsyncThunk(
   "auth/logOut",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await apiClient.post("/api/v1/user/logOut");
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data || { message: error.message }
-      );
+      return await handleApiRequest("post", "/api/v1/user/logOut");
+    } catch (err) {
+      return rejectWithValue(err);
     }
   }
 );
@@ -54,14 +42,11 @@ export const forgetPasswordThunkFn = createAsyncThunk(
   "auth/forgetPassword",
   async (email, { rejectWithValue }) => {
     try {
-      const response = await apiClient.post("/api/v1/user/forgetPassword", {
+      return await handleApiRequest("post", "/api/v1/user/forgetPassword", {
         email,
-      },  { withCredentials: true });
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(
-        error?.message || "Something went wrong. Please try again."
-      );
+      });
+    } catch (err) {
+      return rejectWithValue(err);
     }
   }
 );
@@ -71,15 +56,12 @@ export const resetPasswordThunkFn = createAsyncThunk(
   "auth/resetPassword",
   async ({ resetToken, newPassword }, { rejectWithValue }) => {
     try {
-      const { data } = await apiClient.post("/api/v1/user/reset-password", {
+      return await handleApiRequest("post", "/api/v1/user/reset-password", {
         resetToken,
         newPassword,
-      },  { withCredentials: true });
-      return data; // { success, message, data }
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data || { message: "Reset password failed" }
-      );
+      });
+    } catch (err) {
+      return rejectWithValue(err);
     }
   }
 );
@@ -89,12 +71,9 @@ export const deleteUserThunkFn = createAsyncThunk(
   "auth/deleteUser",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await apiClient.post("/api/v1/user/deleteUser", {}, { withCredentials: true });
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data || { message: error.message }
-      );
+      return await handleApiRequest("post", "/api/v1/user/deleteUser");
+    } catch (err) {
+      return rejectWithValue(err);
     }
   }
 );
@@ -104,12 +83,9 @@ export const userEmailVerificationThunkFn = createAsyncThunk(
   "auth/emailVerification",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await apiClient.post("/api/v1/user/getVerificationCode", {}, { withCredentials: true });
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data || { message: error.message }
-      );
+      return await handleApiRequest("post", "/api/v1/user/getVerificationCode");
+    } catch (err) {
+      return rejectWithValue(err);
     }
   }
 );
@@ -119,58 +95,35 @@ export const verifyEmailVerificationThunkFn = createAsyncThunk(
   "auth/verifyEmail",
   async (verificationToken, { rejectWithValue }) => {
     try {
-      const response = await apiClient.post("/api/v1/user/verifyEmail", {
+      return await handleApiRequest("post", "/api/v1/user/verifyEmail", {
         verificationToken,
-      },  { withCredentials: true });
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data || { message: error.message }
-      );
+      });
+    } catch (err) {
+      return rejectWithValue(err);
     }
   }
 );
 
 //   Get Logged In User Details
-
 export const getUserDetailsThunkFn = createAsyncThunk(
   "auth/getUserDetails",
   async (_, { rejectWithValue }) => {
     try {
-      let token = Cookies.get("token") || localStorage.getItem("token");
-      if (!token) return rejectWithValue({ message: "Please log in or create an account to continue." });
-
-      const config = { withCredentials: true };
-      if (token) config.headers = { Authorization: `Bearer ${token}` };
-
-      const response = await apiClient.get("/api/v1/user/getDetails", config);
-
-      // Ensure response is normalized: { success: true/false, message: string, data: {} }
-      return {
-        success: response.data.success ?? true,
-        message: response.data.message ?? "User details fetched",
-        data: response.data.data ?? response.data,
-      };
-    } catch (error) {
-        //console.log(error);
-      return rejectWithValue(
-        error.response?.data || { message: error.message || "Something went wrong" }
-      );
+      return await handleApiRequest("get", "/api/v1/user/getDetails");
+    } catch (err) {
+      return rejectWithValue(err);
     }
   }
 );
 
-//   Get Logged In User Details
+//   Remove AWS Key
 export const removeKeyThunkFn = createAsyncThunk(
   "auth/removeAwsKey",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await apiClient.post("/api/v1/user/removeAwsApiKey", {}, { withCredentials: true });
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data || { message: error.message }
-      );
+      return await handleApiRequest("post", "/api/v1/user/removeAwsApiKey");
+    } catch (err) {
+      return rejectWithValue(err);
     }
   }
 );
@@ -180,17 +133,9 @@ export const submitAwsCredentialsThunkFn = createAsyncThunk(
   "auth/submitAwsCredentials",
   async (awsCredentials, { rejectWithValue }) => {
     try {
-      const response = await apiClient.post(
-        "/api/v1/user/saveAwsApiKey",
-        awsCredentials,
-        { withCredentials: true }
-      );
-        //console.log(response.data);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data || { message: error.message }
-      );
+      return await handleApiRequest("post", "/api/v1/user/saveAwsApiKey", awsCredentials);
+    } catch (err) {
+      return rejectWithValue(err);
     }
   }
 );
