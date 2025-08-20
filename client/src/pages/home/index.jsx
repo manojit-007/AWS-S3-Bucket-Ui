@@ -4,6 +4,7 @@ import { steps } from "./steps";
 import { ArrowDown, Cloud, ShieldCheck, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSelector } from "react-redux";
+import CorsPolicySnippet from "./cors";
 
 const Home = () => {
   const { user } = useSelector((state) => state.auth);
@@ -131,7 +132,7 @@ const Home = () => {
         <h2 className="text-2xl sm:text-3xl font-bold text-center mb-14 text-gray-800">
           How It Works
         </h2>
-        <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 w-full">
+        <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 w-full mb-4">
           {steps.map((step) => (
             <div
               key={step.id}
@@ -145,6 +146,14 @@ const Home = () => {
             </div>
           ))}
         </div>
+        <section className="space-y-4 max-w-xl m-2">
+          <p className="text-gray-700 text-sm md:text-base">
+            Final step: Copy the following JSON and paste it into your AWS S3{" "}
+            <strong>Cross-Origin Resource Sharing (CORS)</strong> configuration.
+          </p>
+
+          <CorsPolicySnippet />
+        </section>
       </section>
 
       {/* Footer */}
