@@ -47,10 +47,10 @@ export const handleApiRequest = async (method, url, body = {}, config = {}) => {
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const createThunk = (type, asyncFn) =>
-  handleApiRequest( createAsyncThunk(type, async (payload, { rejectWithValue }) => {
+  createAsyncThunk(type, async (payload, { rejectWithValue }) => {
     try {
       return await asyncFn(payload);
     } catch (err) {
       return rejectWithValue(err);
     }
-  }));
+  });
