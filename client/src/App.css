@@ -1,0 +1,12 @@
+.btn-shadow {
+    background: white;
+    border: 1px solid #e1e1e1;
+    box-shadow:  2px 2px 1px rgb(188, 188, 188);
+        /* 2px 2px 1px rgb(0, 0, 0); */
+    transition: all 0.3s linear;
+}
+
+.btn-shadow:hover {
+    box-shadow: none !important;
+    transform: translate(2px, 2px);
+}
