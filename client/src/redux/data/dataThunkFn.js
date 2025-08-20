@@ -1,19 +1,19 @@
 // redux/s3/s3ThunkFn.js
 import { handleApiRequest } from "@/api/req";
-import { createThunk } from "@/utils/createThunk";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
 // Get all bucket content
-export const getAllS3BucketContent = createThunk("s3Bucket/getContent", () =>
+export const getAllS3BucketContent = createAsyncThunk("s3Bucket/getContent", () =>
   handleApiRequest("get", "/api/v1/user/getS3BucketContent")
 );
 
 // Get URL to upload
-export const getUrlToUpload = createThunk("s3Bucket/getUrlToUpload", (files) =>
+export const getUrlToUpload = createAsyncThunk("s3Bucket/getUrlToUpload", (files) =>
   handleApiRequest("post", "/api/v1/user/getUrlToUpload", { files })
 );
 
 // Download file (special because we need to fetch S3 blob)
-export const downloadFileThunkFn = createThunk("s3Bucket/downloadFile", async (key) => {
+export const downloadFileThunkFn = createAsyncThunk("s3Bucket/downloadFile", async (key) => {
   // 1️⃣ Get signed URL
   const { data } = await handleApiRequest("get", `/api/v1/user/download?key=${encodeURIComponent(key)}`);
   const { url } = data;
@@ -40,11 +40,11 @@ export const downloadFileThunkFn = createThunk("s3Bucket/downloadFile", async (k
 });
 
 // Delete single object
-export const deleteS3Object = createThunk("s3Bucket/deleteObject", (key) =>
+export const deleteS3Object = createAsyncThunk("s3Bucket/deleteObject", (key) =>
   handleApiRequest("delete", "/api/v1/user/delete", { key })
 );
 
 // Delete all objects with prefix
-export const deleteS3FolderObject = createThunk("s3Bucket/deleteFolder", (prefix) =>
+export const deleteS3FolderObject = createAsyncThunk("s3Bucket/deleteFolder", (prefix) =>
   handleApiRequest("delete", "/api/v1/user/deleteAllPrefix", { prefix })
 );
