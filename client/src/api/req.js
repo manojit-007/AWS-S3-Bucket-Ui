@@ -45,11 +45,16 @@ export const handleApiRequest = async (method, url, body = {}, config = {}) => {
 };
 // utils/createThunk.js
 import { createAsyncThunk } from "@reduxjs/toolkit";
-
-export const createThunk = (type, asyncFn) =>
+export const createThunk = (type, method, urlBuilder) =>
   createAsyncThunk(type, async (payload, { rejectWithValue }) => {
     try {
-      return await asyncFn(payload);
+      // urlBuilder can be string or function
+      const url = typeof urlBuilder === "function" ? urlBuilder(payload) : urlBuilder;
+
+      // Call API with handleApiRequest
+      const response = await handleApiRequest(method, url, payload?.body || {}, payload?.config || {});
+
+      return response;
     } catch (err) {
       return rejectWithValue(err);
     }
