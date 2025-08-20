@@ -47,3 +47,4 @@ export const deleteS3Object = createThunk("s3Bucket/deleteObject", (key) =>
 export const deleteS3FolderObject = createThunk("s3Bucket/deleteFolder", (prefix) =>
   handleApiRequest("delete", "/api/v1/user/deleteAllPrefix", { prefix })
 );
+

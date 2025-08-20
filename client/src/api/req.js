@@ -23,6 +23,11 @@ export const handleApiRequest = async (method, url, body = {}, config = {}) => {
     let response;
     if (method === "get") {
       response = await apiClient.get(url, requestConfig);
+    } else if (method === "delete") {
+      response = await apiClient.delete(url, {
+        ...requestConfig,
+        data: body,   // 👈 axios delete requires data here
+      });
     } else {
       response = await apiClient[method](url, body, requestConfig);
     }

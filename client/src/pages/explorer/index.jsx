@@ -11,11 +11,11 @@ import FileNode from "./FileNode";
 import UploaderForm from "./UploaderForm";
 import DeleteConfirmDialog from "@/components/ui/deleteConfirmDialog";
 import { toast } from "sonner";
-import apiClient from "@/api";
 import { Button } from "@/components/ui/button";
 import { File, Files, FilesIcon, Folder, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { handleThunkResponse } from "@/utils/ShowMessage";
+import { handleApiRequest } from "@/api/req";
 
 const FileExplorer = () => {
   const dispatch = useDispatch();
@@ -117,17 +117,20 @@ const FileExplorer = () => {
 
   const handleView = async (key) => {
     try {
-      const res = await apiClient.get(
+      const { data } = await handleApiRequest(
+        "get",
         `/api/v1/user/download?key=${encodeURIComponent(key)}`
       );
-      const { url } = res.data.data;
+  
+      const { url } = data;
       if (!url) throw new Error("No signed URL returned");
-
+  
       window.open(url, "_blank", "noopener,noreferrer");
     } catch (err) {
-      toast.error(err.message || "   Failed to view file");
+      toast.error(err.message || "Failed to view file");
     }
   };
+  
 
   return (
     <main className="min-h-screen dark:bg-zinc-900 p-6">
